@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-plus-circle"></i>Add Product
+        </h1>
+
+        <!-- Show error message if exists -->
+        <% if(typeof error !== 'undefined' && error) { %>
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle"></i> <%= error %>
+            </div>
+        <% } %>
+
+        <form action="/createProduct" method="post">
+            <div class="form-group mb-3">
+                <label for="productName" class="form-label">
+                    <i class="fas fa-box"></i>Product Name
+                </label>
+                <!-- Fixed: Changed name to match controller expectations -->
+                <input type="text" class="form-control" id="productName" 
+                       name="Product_name" placeholder="Enter product name" required>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="productSize" class="form-label">
+                    <i class="fas fa-ruler-combined"></i>Product Size
+                </label>
+                <!-- Fixed: Changed name to match controller expectations -->
+                <input type="text" class="form-control" id="productSize" 
+                       name="Product_size" placeholder="Enter product size" required>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="productColor" class="form-label">
+                    <i class="fas fa-palette"></i>Product Color
+                </label>
+                <!-- Fixed: Changed name to match controller expectations -->
+                <input type="text" class="form-control" id="productColor" 
+                       name="Product_color" placeholder="Enter product color" required>
+            </div>
+            
+            <div class="form-group mb-3">
+                <label for="userSelect" class="form-label">
+                    <i class="fas fa-user"></i>Select User
+                </label>
+                <!-- Fixed: Changed name to match controller expectations -->
+                <select class="form-control" id="userSelect" name="userId" required>
+                    <option value="">Choose a user...</option>
+                    <% user.forEach((userItem, index) => { %>
+                        <option value="<%= userItem._id %>">
+                            <%= userItem.user_name %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+            
+            <div class="form-group mb-3">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-check-circle me-2"></i>Add Product
+                </button>
+                <a href="/productName" class="btn btn-secondary w-100 mt-2">
+                    <i class="fas fa-list me-2"></i>View Products
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- jQuery and Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
