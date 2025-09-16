@@ -13,7 +13,8 @@ class EjsController {
       return res.status(500).send("Error loading user form");
     }
   }
-  //   Productform
+
+  // Product form
   async ProdcutForm(req, res) {
     try {
       const user = await userSchema.find();
@@ -26,36 +27,44 @@ class EjsController {
       return res.status(500).send("Error loading product form");
     }
   }
-  //   editpage
+
+  // Edit page
   async productEdit(req, res) {
     const id = req.params.id;
     try {
       const editdata = await productSchema.findById(id);
       if (!editdata) {
-        return res.status(404).json({ message: "Prodcut not found" });
+        return res.status(404).json({ message: "Product not found" });
       }
-      res.render("editpage", {
+
+      // FIXED: Changed user.find() to userSchema.find()
+      const users = await userSchema.find();
+
+      // FIXED: Added return statement
+      return res.render("editpage", {
         title: "edit_product_page",
         data: editdata,
-        user: await user.find(),
+        user: users, // FIXED: Use users variable instead of await user.find()
       });
     } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: "Error fetching product" });
+      console.error("Error fetching product for edit:", error);
+      return res.status(500).send({ message: "Error fetching product" });
     }
   }
+
   async handleProductUpdate(req, res) {
     const id = req.params.id;
     try {
-      const { product_name, color, size, user_id } = req.body;
+      // Match the actual form field names
+      const { Product_name, Product_color, Product_size, userId } = req.body;
 
       const updateData = await productSchema.findByIdAndUpdate(
         id,
         {
-          Product_name: product_name,
-          Product_color: color,
-          Product_size: size,
-          userId: user_id,
+          Product_name: Product_name,
+          Product_color: Product_color,
+          Product_size: Product_size,
+          userId: userId,
         },
         { new: true }
       );
@@ -71,4 +80,5 @@ class EjsController {
     }
   }
 }
+
 module.exports = new EjsController();

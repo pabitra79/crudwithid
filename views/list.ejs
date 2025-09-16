@@ -56,26 +56,28 @@
               <td><%= item.Product_size %></td>
               <td><%= item.Product_color %></td>
               <td class="text-center">
-                <!-- Debug: Let's see what ID we're generating -->
-                <!-- Fixed: Correct route for edit -->
+                <!-- Edit button (link works fine) -->
                 <a
                   href="/product/edit/<%= item._id %>"
                   class="btn btn-success btn-sm"
                 >
                   <i class="fas fa-edit"></i> Edit
                 </a>
-                <!-- Fixed: Correct route for delete with confirmation -->
-                <a
-                  href="/productDelete/<%= item._id %>"
-                  class="btn btn-danger btn-sm ml-1"
-                  onclick="return confirm('Are you sure you want to delete this product?')"
+
+                <!-- FIXED: Delete using form instead of link -->
+                <form
+                  action="/productDelete/<%= item._id %>"
+                  method="post"
+                  style="display: inline"
                 >
-                  <i class="fas fa-trash"></i> Delete
-                </a>
-                <!-- Debug info - remove this after fixing -->
-                <!-- <small class="d-block mt-1 text-muted"
-                  >ID: <%= item._id %></small
-                > -->
+                  <button
+                    type="submit"
+                    class="btn btn-danger btn-sm ml-1"
+                    onclick="return confirm('Are you sure you want to delete this product?')"
+                  >
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                </form>
               </td>
             </tr>
             <% }); %>

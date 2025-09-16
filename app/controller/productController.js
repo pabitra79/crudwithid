@@ -1,44 +1,39 @@
-const Productschema = require("../model/productSchema");
 const productSchema = require("../model/productSchema");
 
 class ProductController {
   async craeteProduct(req, res) {
     try {
       const { Product_name, Product_color, Product_size, userId } = req.body;
-      // if (!Product_name || !Product_color || !Product_size || !userId) {
-      //   console.log("All feild required");
-      // }
+
       const data = new productSchema({
         Product_name,
         Product_color,
         Product_size,
         userId,
       });
+
       const newProductData = await data.save();
-      // return res.status(201).json({ newProductData });
+
       if (newProductData) {
-        res.redirect("/productName");
+        return res.redirect("/productName");
       }
     } catch (err) {
       return res.status(500).json({ err: err.message });
     }
   }
-  //   its get product for normal for json/postman
+
   async getProduct(req, res) {
     try {
-      const product = await Productschema.find();
-      return res.status(201).json({
-        product,
-      });
+      const product = await productSchema.find();
+      return res.status(200).json({ product });
     } catch (err) {
-      return res.status(500).json({ err: "can not find the Product" });
+      return res.status(500).json({ err: "Cannot find the Product" });
     }
   }
 
-  //   with id or name show the product the details
   async getProductWithName(req, res) {
     try {
-      const ProdcutName = await productSchema.aggregate([
+      const products = await productSchema.aggregate([
         {
           $lookup: {
             from: "usercruds",
@@ -59,47 +54,50 @@ class ProductController {
           },
         },
       ]);
-      // res.status(201).json({ ProdcutName });
+
       return res.render("list", {
         title: "user_list",
-        data: ProdcutName,
+        data: products,
       });
     } catch (err) {
-      return res.status(500).json({ err });
+      return res.status(500).json({ err: err.message });
     }
   }
+
   async updateProduct(req, res) {
     try {
       const id = req.params.id;
       const { Product_name, Product_color, Product_size, userId } = req.body;
+
       const updateData = await productSchema.findByIdAndUpdate(id, {
         Product_name,
         Product_color,
         Product_size,
         userId,
       });
+
       if (updateData) {
-        return res.staus(201).json({ updateData });
+        return res.redirect("/productName");
       }
     } catch (err) {
-      return res.status(500).json({ error: "Data Not update" });
+      return res.status(500).json({ error: "Data not updated" });
     }
   }
+
   async deleteProduct(req, res) {
     try {
       const id = req.params.id;
       const result = await productSchema.findByIdAndDelete(id);
+
       if (!result) {
-        return res.status(404).json({ error: "Product Not found" });
+        return res.status(404).json({ error: "Product not found" });
       }
-      // return res.r(200).json({ result });
-      return res.render("list", {
-        title: "user_list",
-        data: ProdcutName,
-      });
+
+      return res.redirect("/productName");
     } catch (err) {
-      return res.status(500).json({ error: "product Not delete" });
+      return res.status(500).json({ error: "Product not deleted" });
     }
   }
 }
+
 module.exports = new ProductController();
